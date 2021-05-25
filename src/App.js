@@ -1,6 +1,7 @@
 import './App.css';
 import React, {Component} from "react";
 import SocketProxy from "./socket/SocketProxy";
+import LoginView from "./view/LoginView/LoginView";
 
 class App extends Component {
 
@@ -13,18 +14,12 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <button onClick={this._onConnectClick}>
-                    Connect to server
-                </button>
+            <div className="container">
+                <LoginView/>
             </div>
         );
     }
 
-    _onConnectClick = () => {
-        let socketProxy = SocketProxy.getInstance();
-        socketProxy.connect();
-    }
 }
 
 export default App;

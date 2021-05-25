@@ -12,6 +12,13 @@ class SocketProxy {
         return SocketProxy.instance;
     }
 
+    constructor() {
+        this.connection = {
+            username: "",
+            password: ""
+        }
+    }
+
     setup() {
         let config = new Ezy.ClientConfig();
         config.zoneName = "chat-tutorial";
@@ -22,6 +29,16 @@ class SocketProxy {
         let setup = client.setup;
 
         // Define handlers
+
+        let handshakeHandler = new Ezy.HandshakeHandler();
+        handshakeHandler.getLoginRequest = () => {
+            let username = this.connection.username;
+            let password = this.connection.password;
+            let zoneName = config.zoneName;
+            let data = [];
+            return [zoneName, username, password, data];
+        }
+
         let disconnectionHandler = new Ezy.DisconnectionHandler();
         disconnectionHandler.preHandle = (event) => {
             console.log('Received disconnection command from server');
@@ -30,6 +47,7 @@ class SocketProxy {
 
         // Register handlers
         setup.addEventHandler(Ezy.EventType.DISCONNECTION, disconnectionHandler);
+        setup.addDataHandler(Ezy.Command.HANDSHAKE, handshakeHandler);
 
         return client;
     }
@@ -43,6 +61,13 @@ class SocketProxy {
     getClient() {
         let clients = Ezy.Clients.getInstance();
         return clients.getDefaultClient();
+    }
+
+    defineLoginRequest(username, password) {
+        this.connection = {
+            username: username,
+            password: password
+        }
     }
 }
 

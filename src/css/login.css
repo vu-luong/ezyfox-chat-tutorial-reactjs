@@ -1,0 +1,14 @@
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    padding: 16pt;
+    margin-top: 46pt;
+    width: 700px
+}
+
+.login-button {
+    margin-top: 16pt;
+}
