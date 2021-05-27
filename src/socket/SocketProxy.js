@@ -1,5 +1,6 @@
 // Singleton Class
 import Ezy from "ezyfox-es6-client";
+import {toast} from "react-toastify";
 
 class SocketProxy {
     static instance = null;
@@ -29,7 +30,6 @@ class SocketProxy {
         let setup = client.setup;
 
         // Define handlers
-
         let handshakeHandler = new Ezy.HandshakeHandler();
         handshakeHandler.getLoginRequest = () => {
             let username = this.connection.username;
@@ -37,6 +37,23 @@ class SocketProxy {
             let zoneName = config.zoneName;
             let data = [];
             return [zoneName, username, password, data];
+        }
+
+        let loginSuccessHandler = new Ezy.LoginSuccessHandler();
+        loginSuccessHandler.handleLoginSuccess = () => {
+            let appAccessData = ["chat-tutorial", []];
+            this.getClient().sendRequest(Ezy.Command.APP_ACCESS, appAccessData);
+        }
+
+        let appAccessHandler = new Ezy.AppAccessHandler();
+        appAccessHandler.postHandle = (app, data) => {
+            toast.success("Access app successfully: " + app.name + ": " + data);
+        }
+
+        let loginErrorHandler = new Ezy.LoginErrorHandler();
+        loginErrorHandler.handleLoginError = (event) => {
+            console.log("Logged in with error: ", event[1]);
+            toast.error("User logged in with error: " + event[1]);
         }
 
         let disconnectionHandler = new Ezy.DisconnectionHandler();
@@ -48,6 +65,9 @@ class SocketProxy {
         // Register handlers
         setup.addEventHandler(Ezy.EventType.DISCONNECTION, disconnectionHandler);
         setup.addDataHandler(Ezy.Command.HANDSHAKE, handshakeHandler);
+        setup.addDataHandler(Ezy.Command.LOGIN, loginSuccessHandler);
+        setup.addDataHandler(Ezy.Command.LOGIN_ERROR, loginErrorHandler);
+        setup.addDataHandler(Ezy.Command.APP_ACCESS, appAccessHandler);
 
         return client;
     }
