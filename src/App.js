@@ -4,6 +4,9 @@ import SocketProxy from "./socket/SocketProxy";
 import LoginView from "./view/LoginView/LoginView";
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
+import {Route} from "react-router-dom";
+import MessageView from "./view/MessageView/MessageView";
+import Mvc from "mvc-es6";
 
 toast.configure()
 class App extends Component {
@@ -13,12 +16,24 @@ class App extends Component {
 
         this.socketProxy = SocketProxy.getInstance();
         this.socketProxy.setup();
+
+        this.mvc = Mvc.getInstance();
+        this.mvc.newController("router");
+    }
+
+    componentDidMount() {
+        let routerController = this.mvc.getController("router");
+        let {history} = this.props;
+        routerController.addDefaultView("navigate", viewURI => {
+            history.push(viewURI);
+        });
     }
 
     render() {
         return (
             <div className="container">
-                <LoginView/>
+                <Route exact path="/login" render={(props) => <LoginView {...props}/>}/>
+                <Route exact path="/message" render={(props) => <MessageView {...props}/>}/>
             </div>
         );
     }

@@ -1,6 +1,7 @@
 // Singleton Class
 import Ezy from "ezyfox-es6-client";
 import {toast} from "react-toastify";
+import Mvc from "mvc-es6";
 
 class SocketProxy {
     static instance = null;
@@ -21,6 +22,7 @@ class SocketProxy {
     }
 
     setup() {
+        let mvc = Mvc.getInstance();
         let config = new Ezy.ClientConfig();
         config.zoneName = "chat-tutorial";
         config.reconnect.enable = false;
@@ -48,6 +50,9 @@ class SocketProxy {
         let appAccessHandler = new Ezy.AppAccessHandler();
         appAccessHandler.postHandle = (app, data) => {
             toast.success("Access app successfully: " + app.name + ": " + data);
+            // Navigate to the MessageView page
+            let routerController = mvc.getController("router");
+            routerController.updateViews("navigate", "/message");
         }
 
         let loginErrorHandler = new Ezy.LoginErrorHandler();
