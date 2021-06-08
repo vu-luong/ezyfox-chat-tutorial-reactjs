@@ -2,6 +2,7 @@
 import Ezy from "ezyfox-es6-client";
 import {toast} from "react-toastify";
 import Mvc from "mvc-es6";
+import {AppCommand} from "./SocketConstants";
 
 class SocketProxy {
     static instance = null;
@@ -73,6 +74,12 @@ class SocketProxy {
         setup.addDataHandler(Ezy.Command.LOGIN, loginSuccessHandler);
         setup.addDataHandler(Ezy.Command.LOGIN_ERROR, loginErrorHandler);
         setup.addDataHandler(Ezy.Command.APP_ACCESS, appAccessHandler);
+
+        let setupApp = setup.setupApp("chat-tutorial");
+        setupApp.addDataHandler(AppCommand.GET_ALL_USERS, (app, data) => {
+            let chatController = mvc.getController("chat");
+            chatController.updateViews("addAllUsers", data);
+        });
 
         return client;
     }

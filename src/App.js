@@ -19,6 +19,7 @@ class App extends Component {
 
         this.mvc = Mvc.getInstance();
         this.mvc.newController("router");
+        this.mvc.newController("chat");
     }
 
     componentDidMount() {
@@ -31,7 +32,7 @@ class App extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="w-100 vh-100">
                 <Route exact path="/login" render={(props) => <LoginView {...props}/>}/>
                 <Route exact path="/message" render={(props) => <MessageView {...props}/>}/>
             </div>

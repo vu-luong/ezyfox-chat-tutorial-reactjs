@@ -1,0 +1,17 @@
+.user-list {
+    flex: 2
+}
+
+.chat-section {
+    flex: 6
+}
+
+.user-btn {
+    font-weight: 500;
+    color: #333;
+    padding: 2px
+}
+
+.user-btn.active {
+    color: #007bff
+}
