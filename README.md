@@ -1,5 +1,5 @@
 # ezyfox-chat-tutorial-reacjs
-Official source code for the Chat Tutorial using EzyFox Server: https://www.youtube.com/watch?v=BI-CwpJjcPU&list=PLlZavoxtKE1IfKY7ohkLLyv6YkHMkvH6G
+Official ReactJS source code for the Chat Tutorial using EzyFox ecosystem: https://www.youtube.com/watch?v=BI-CwpJjcPU&list=PLlZavoxtKE1IfKY7ohkLLyv6YkHMkvH6G
 
 # Usage
  
