@@ -81,6 +81,11 @@ class SocketProxy {
             chatController.updateViews("addAllUsers", data);
         });
 
+        setupApp.addDataHandler(AppCommand.GET_CHANNEL, (app, data) => {
+           const {channelId} = data;
+           console.log('Received getchannel response, channelId = ', channelId);
+        });
+
         return client;
     }
 

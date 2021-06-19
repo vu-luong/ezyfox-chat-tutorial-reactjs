@@ -26,6 +26,10 @@ class SocketRequest {
     getAllUsersRequest() {
         this.getApp().sendRequest(AppCommand.GET_ALL_USERS, {});
     }
+
+    getChannelRequest(users) {
+        this.getApp().sendRequest(AppCommand.GET_CHANNEL, {users});
+    }
 }
 
 export default SocketRequest;

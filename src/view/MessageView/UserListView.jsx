@@ -1,5 +1,6 @@
 import React from "react";
 import Mvc from "mvc-es6";
+import SocketRequest from "../../socket/SocketRequest";
 
 class UserItem extends React.Component {
 
@@ -11,6 +12,7 @@ class UserItem extends React.Component {
 
     _onClick = () => {
         const {user} = this.props;
+        SocketRequest.getInstance().getChannelRequest([user.username]);
         this.chatController.updateViews("changeTargetUser", user.id);
     }
 
@@ -20,7 +22,7 @@ class UserItem extends React.Component {
         return (
             <div>
                 <button type="button" className={"user-btn btn btn-link" + activeClass}
-                    onClick={this._onClick}>
+                        onClick={this._onClick}>
                     {user.username}
                 </button>
             </div>
@@ -28,7 +30,7 @@ class UserItem extends React.Component {
     }
 }
 
-class UserListView extends React.Component{
+class UserListView extends React.Component {
 
     render() {
         const {users, chatTarget} = this.props;
