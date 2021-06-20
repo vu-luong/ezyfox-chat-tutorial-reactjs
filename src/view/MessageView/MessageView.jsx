@@ -3,6 +3,8 @@ import './style.css'
 import SocketRequest from "../../socket/SocketRequest";
 import Mvc from 'mvc-es6';
 import UserListView from "./UserListView";
+import MessageBubble from "./MessageBubble";
+import SocketProxy from "../../socket/SocketProxy";
 
 class MessageView extends React.Component {
 
@@ -10,11 +12,15 @@ class MessageView extends React.Component {
         super(props);
         this.state = {
             allUsers: [],
-            targetUser: null
+            targetUser: null,
+            targetChannel: null,
+            message: "",
+            chatLogs: null
         }
 
         let mvc = Mvc.getInstance();
         this.chatController = mvc.getController("chat");
+        this.me = SocketProxy.getInstance().connection.username;
     }
 
     componentDidMount() {
@@ -25,6 +31,17 @@ class MessageView extends React.Component {
         this.chatController.addDefaultView("changeTargetUser", (target) => {
             this.updateTargetUser(target);
         });
+
+        this.chatController.addDefaultView("changeTargetChannel", (target) => {
+            this.updateTargetChannel(target);
+        });
+
+        this.chatController.addDefaultView("updateChatLogs", ({chatLogs, channelId}) => {
+            if (channelId === this.state.targetChannel) {
+                this.updateChatLogs(chatLogs);
+            }
+        });
+
         SocketRequest.getInstance().getAllUsersRequest();
     }
 
@@ -36,22 +53,80 @@ class MessageView extends React.Component {
         this.setState({targetUser: target});
     }
 
-    render() {
+    updateTargetChannel(target) {
+        let newTarget = target ? target : 0;
+        this.setState({targetChannel: newTarget});
+    }
 
-        const {allUsers, targetUser} = this.state;
+    updateChatLogs(chatLogs) {
+        this.setState({chatLogs: chatLogs});
+    }
+
+    _onMessageChange = (e) => {
+        this.setState({"message": e.target.value});
+    }
+
+    _onSendMessageClick = (e) => {
+        let message = this.state.message;
+
+        if (!message) {
+            return;
+        }
+
+        this.setState({message: ""});
+        this.sendMessage(message);
+    }
+
+    sendMessage(message) {
+        const {targetChannel} = this.state;
+        SocketRequest.getInstance().sendMessageRequest(targetChannel, message);
+    }
+
+    _onEnter = (e) => {
+        if (e.key === 'Enter') {
+            this._onSendMessageClick(e);
+        }
+    }
+
+    render() {
+        const {allUsers, targetUser, targetChannel, chatLogs} = this.state;
 
         return (
             <div className="w-100 h-100">
                 <div className="d-flex h-100">
-                    <div className="user-list">
+                    <div className="user-list sidebar">
                         <div className="d-flex flex-column h-100 align-items-center">
                             <h3>Users</h3>
                             <UserListView users={allUsers} chatTarget={targetUser}/>
                         </div>
                     </div>
 
-                    <div className="chat-section">
-                        Hello
+                    <div className="container chat-section">
+                        <h1 className="h2">
+                            {"Chat Channel Id: " + targetChannel}
+                        </h1>
+                        <div className="overflow-auto chat-text-panel">
+                            {
+                                chatLogs?.map((log, i) =>
+                                    <MessageBubble key={i} isMe={this.me === log.sender} message={log.message}/>
+                                )
+                            }
+                        </div>
+                        <div className="chat-panel">
+                            <input
+                                type="text"
+                                placeholder="Aa"
+                                value={this.state.message}
+                                onChange={this._onMessageChange}
+                                onKeyDown={this._onEnter}
+                                className="form-control chat-input"/>
+                            <button
+                                type="button"
+                                className="btn btn-primary chat-button"
+                                onClick={this._onSendMessageClick}>
+                                Send
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

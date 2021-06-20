@@ -30,6 +30,10 @@ class SocketRequest {
     getChannelRequest(users) {
         this.getApp().sendRequest(AppCommand.GET_CHANNEL, {users});
     }
+
+    sendMessageRequest(targetChannel, message) {
+        this.getApp().sendRequest(AppCommand.SEND_MESSAGE, {message: message, channelId: targetChannel});
+    }
 }
 
 export default SocketRequest;

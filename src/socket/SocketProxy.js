@@ -82,8 +82,24 @@ class SocketProxy {
         });
 
         setupApp.addDataHandler(AppCommand.GET_CHANNEL, (app, data) => {
-           const {channelId} = data;
-           console.log('Received getchannel response, channelId = ', channelId);
+            const {channelId, chatLogs} = data;
+            console.log('Received getchannel response, channelId = ', channelId);
+            let chatController = mvc.getController("chat");
+            chatController.updateViews("changeTargetChannel", channelId);
+            chatController.updateViews(
+                "updateChatLogs",
+                {chatLogs: chatLogs, channelId: channelId});
+        });
+
+        setupApp.addDataHandler(AppCommand.SEND_MESSAGE, (app, data) => {
+            const {channelId, chatLogs} = data;
+            console.log('Receive SEND_MESSAGE response');
+            console.log("channelId: ", channelId);
+            console.log("chatLogs: ", chatLogs);
+            let chatController = mvc.getController("chat");
+            chatController.updateViews(
+                "updateChatLogs",
+                {chatLogs: chatLogs, channelId: channelId});
         });
 
         return client;

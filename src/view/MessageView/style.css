@@ -15,3 +15,56 @@
 .user-btn.active {
     color: #007bff
 }
+
+.sidebar {
+    height: 100vh;
+    flex: 2;
+    background: #f8f8f8;
+}
+
+.chat-section {
+    flex: 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 100vh;
+    height: 100vh;
+}
+
+.chat-panel {
+    display: flex;
+    margin-bottom: .5em;
+    margin-top: .5em;
+}
+
+.chat-panel .chat-input {
+    width: 100%;
+}
+
+.chat-panel .chat-button {
+    width: 5em;
+    margin-left: 1em;
+    padding: 0.3em;
+}
+
+.chat-text-panel {
+    border: 2px;
+    display: flex;
+    flex-direction: column;
+    padding: 1em 0.3em;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.message-bubble {
+    border-radius: 1em;
+    max-width: 75%;
+    margin-bottom: 0.2em;
+    padding: 0.1em 0.4em
+}
+
+.end-chatlog {
+    float: left;
+    clear: both;
+    background: #007bff;
+}
